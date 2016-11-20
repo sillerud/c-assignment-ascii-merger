@@ -9,16 +9,13 @@
 #define PART_WIDTH 30
 #define PART_HEIGHT 30
 
-int main(int argc, char **argv) {
-	if (argc <= 1) {
-		return 0;
-	}
+int merge(char *base_path, char ***lines_return, int *n_lines_return) {
 	regex_t regex;
 	if (regcomp(&regex, "^part_([0-9]+)_([0-9]+)_.+", REG_ICASE | REG_EXTENDED)) {
 		printf("Failed to compile regex\n");
-		return 0;
+		return 1;
 	}
-	DIR *partsFolder = opendir(argv[1]);
+	DIR *partsFolder = opendir(base_path);
 	struct dirent *partFile;
 	char *fileNames[MAX_WIDTH_TILES][MAX_HEIGHT_TILES];
 	int width = 0;
@@ -43,8 +40,9 @@ int main(int argc, char **argv) {
 			if (height < y) {
 				height = y;
 			}
-			char *fullFileName = malloc(strlen(argv[1]) + strlen(fileName) + 2);
-			strcpy(fullFileName, argv[1]);
+			char *fullFileName = malloc(strlen(base_path) + strlen(fileName) + 2);
+			strcpy(fullFileName, base_path);
+			strcat(fullFileName, "/");
 			strcat(fullFileName, fileName);
 			fileNames[x][y] = fullFileName;
 		}
@@ -59,19 +57,22 @@ int main(int argc, char **argv) {
 		for (int y = 0; y < height; y++) {
 			FILE *file = fopen(fileNames[x][y], "r");
 			files[x][y] = file;
+			printf("%s\n", fileNames[x][y]);
 			free(fileNames[x][y]);
 		}
 	}
 
+	*lines_return = (char**)malloc(sizeof(char *) * height * PART_HEIGHT);
+	*n_lines_return = height * PART_HEIGHT;
+
 	for (int y = 0; y < height; y++) {
 		for (int i = 0; i < PART_HEIGHT; i++) {
-			char *line = malloc(PART_WIDTH * width + 1);
+			char *line = malloc((PART_WIDTH * width + 1) * sizeof(char));
 			for (int x = 0; x < width; x++) {
-				fread(&line[x * PART_WIDTH], 1, PART_WIDTH, files[x][y]);
+				fread(&line[x * PART_WIDTH], sizeof(char), PART_WIDTH, files[x][y]);
 			}
 			line[PART_WIDTH * width] = '\0';
-			printf("%s", line);
-			free(line);
+			lines_return[0][i + y * PART_HEIGHT] = line;
 		}
 		for (int x = 0; x < width; x++) {
 			fclose(files[x][y]);

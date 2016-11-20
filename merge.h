@@ -1,0 +1,1 @@
+int merge(char *base_path, char ***lines_return, int *number_of_lines_return);

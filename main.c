@@ -8,17 +8,13 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	char **lines;
-	int number_of_lines = 0;
+	AsciiResult ascii_result;
 
-	merge(argv[1], &lines, &number_of_lines);
-	printf("%x\n", (void *) lines);
+	merge(argv[1], &ascii_result);
 
-	for (int i = 0; i < number_of_lines; i++) {
-		printf("%s", lines[i]);
-		free(lines[i]);
+	for (int i = 0; i < ascii_result.count; i++) {
+		printf("%s", ascii_result.lines[i]);
 	}
 	printf("\n");
-
-	free(lines);
+	merge_free(&ascii_result);
 }

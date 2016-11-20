@@ -1,1 +1,7 @@
-int merge(char *base_path, char ***lines_return, int *number_of_lines_return);
+typedef struct AsciiResultType {
+	char **lines;
+	int count;
+} AsciiResult;
+
+int merge(char *base_path, AsciiResult *ascii_result);
+void merge_free(AsciiResult *ascii_result);

@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
 	merge(argv[1], &ascii_result);
 
-	for (int i = 0; i < ascii_result.count; i++) {
+	for (int i = 0; i < ascii_result; i++) {
 		printf("%s", ascii_result.lines[i]);
 	}
 	printf("\n");

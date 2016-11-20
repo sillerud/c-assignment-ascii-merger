@@ -26,6 +26,8 @@ int merge(char *base_path, AsciiResult *ascii_result) {
 		regmatch_t pmatch[3];
 		if (!regexec(&regex, partFile->d_name, 3, pmatch, 0)) {
 			char *fileName = partFile->d_name;
+			// I was considering splitting this into its own method as its
+			// a lot of duplicate code, but I've chosen to not use time on it.
 			int xStrSize = pmatch[1].rm_eo - pmatch[1].rm_so;
 			int yStrSize = pmatch[2].rm_eo - pmatch[2].rm_so;
 			char xStr[xStrSize + 1];

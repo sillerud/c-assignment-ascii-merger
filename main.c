@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include "merge.h"
 
+int contains_newline(char *value) {
+	int i = 0;
+	char c;
+	while ((c = value[i++]) != '\0') {
+		if (c == '\n')
+			return 1;
+	}
+	return 0;
+}
+
 int main(int argc, char **argv) {
 	char *output = NULL;
 	if (argc <= 1) {
@@ -18,7 +28,7 @@ int main(int argc, char **argv) {
 
 	if (output == NULL) {
 		for (int i = 0; i < ascii_result.count; i++) {
-			printf("%s", ascii_result.lines[i]);
+			printf(contains_newline(ascii_result.lines[i]) ? "%s" : "%s\n", ascii_result.lines[i]);
 		}
 		printf("\n");
 	} else {
